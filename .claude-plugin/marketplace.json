@@ -1,0 +1,14 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "ogrenci-proje-baslangic",
+  "description": "Üniversite ders ve takım projeleri için başlangıç paketi.",
+  "owner": {"name": "oguzhankaygin"},
+  "plugins": [
+    {
+      "name": "ogrenci-proje",
+      "source": "./plugin",
+      "description": "Proje iskeleti, öğrenme modu ve teslim kontrolü.",
+      "version": "0.1.0"
+    }
+  ]
+}

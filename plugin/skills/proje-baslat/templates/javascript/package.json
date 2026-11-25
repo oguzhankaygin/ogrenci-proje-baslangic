@@ -1,0 +1,17 @@
+{
+  "name": "{{paket}}",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {"node": "^22.13.0 || >=24"},
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test",
+    "lint": "eslint .",
+    "format": "eslint . --fix"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.15.0"
+  }
+}
