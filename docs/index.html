@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Ders projesi iskeleti, öğrenme modu ve teslim kontrolü için ücretsiz Claude Code eklentisi.">
+  <title>Öğrenci Proje Başlangıç Paketi</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main>
+  <header>
+    <h1>Öğrenci Proje Başlangıç Paketi</h1>
+    <p>Python, JavaScript, Java ve C ders projeleri için test, README ve takım şablonlarıyla hazır iskelet. Ücretsiz ve açık kaynak.</p>
+  </header>
+
+  <section aria-labelledby="yol1">
+    <h2 id="yol1">1. Claude Code ile</h2>
+    <p>Claude Code oturumunda şu iki komutu çalıştır:</p>
+    <div class="kod"><pre id="kurulum">/plugin marketplace add oguzhankaygin/ogrenci-proje-baslangic
+/plugin install ogrenci-proje@ogrenci-proje-baslangic</pre>
+      <button type="button" data-kopyala="kurulum">Kopyala</button></div>
+    <ul>
+      <li><code>/ogrenci-proje:proje-baslat [ad]</code>: iskeleti oluşturur ve testi çalıştırır.</li>
+      <li><code>/ogrenci-proje:ipucu [konu]</code>: öğrenme modunda sıradaki tek ipucunu verir.</li>
+      <li><code>/ogrenci-proje:teslim-kontrol</code>: testleri, belgeleri, TODO'ları ve Git kayıtlarını denetler.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="yol2">
+    <h2 id="yol2">2. Yalnızca Python ile (Claude gerekmez)</h2>
+    <p>Depoyu <a href="https://github.com/oguzhankaygin/ogrenci-proje-baslangic/archive/refs/heads/main.zip">ZIP olarak indir</a>, klasörde şunu çalıştır (Python 3.10+):</p>
+    <div class="kod"><pre id="python">python3 plugin/skills/proje-baslat/scripts/baslat.py --ad odev-1 --dil python --tur bireysel --ders "BLM101"</pre>
+      <button type="button" data-kopyala="python">Kopyala</button></div>
+    <p><code>--dil</code>: python, javascript, java, c · <code>--tur</code>: bireysel, takim · <code>--kuru</code>: yalnızca dosya listesini göster.</p>
+  </section>
+
+  <section aria-labelledby="yol3">
+    <h2 id="yol3">3. Ücretsiz Claude hesabıyla öğrenme modu</h2>
+    <p>Kurulum yapamıyorsan, öğrenme modu kurallarını sohbete taşıyan hazır istemi kopyala. Claude çözümü vermek yerine adım adım ipucuyla ilerler.</p>
+    <label for="konu">Proje konusu ve dili</label>
+    <input id="konu" type="text" maxlength="300" placeholder="Örn. Python ile bağlı liste ödevi">
+    <p><button type="button" id="claude-ac">Claude'da aç</button> <span id="durum" class="durum" role="status"></span></p>
+  </section>
+
+  <section aria-labelledby="araclar">
+    <h2 id="araclar">Diğer ücretsiz öğrenci araçları</h2>
+    <ul class="araclar">
+      <li><a href="https://oguzhankaygin.github.io/sokratik-calisma-kocu/">Sokratik Ders Çalışma Koçu</a>: konuyu sorularla çalış.</li>
+      <li><a href="https://oguzhankaygin.github.io/ders-yz-rehberi/">Ders Bazlı Yapay Zekâ Rehberi</a>: dersin YZ kurallarını netleştir.</li>
+      <li><a href="https://oguzhankaygin.github.io/turkce-yazim-denetcisi/">Türkçe Yazım ve Biçim Denetçisi</a>: ödev metnini denetle.</li>
+      <li><a href="https://oguzhankaygin.github.io/kaynakca-denetcisi/">Kaynakça Denetçisi</a>: APA/IEEE kaynakçanı kontrol et.</li>
+      <li><a href="https://oguzhankaygin.github.io/staj-cv-kocu/">Staj ve CV Koçu</a>: CV'ni ilana göre iyileştir.</li>
+      <li><a href="https://oguzhankaygin.github.io/burs-takvimi-mcp/">Burs, Yurt ve Staj Takvimi</a>: son tarihleri kaçırma.</li>
+      <li><a href="https://oguzhankaygin.github.io/burs-atolyesi/">Burs Başvuru Atölyesi</a>: başvuru metnini güçlendir.</li>
+    </ul>
+  </section>
+
+  <footer><p><a href="https://github.com/oguzhankaygin/ogrenci-proje-baslangic">Kaynak kod</a> · MIT lisansı</p></footer>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

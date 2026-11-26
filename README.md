@@ -2,6 +2,10 @@
 
 Bu Claude Code eklentisi, üniversite ders projeleri için Python, JavaScript, Java ve C iskeleti oluşturur. Her projede Türkçe README, örnek kod ve test, lint veya biçim ayarları, `.gitignore`, `.editorconfig` ve `CLAUDE.md` bulunur. Takım projelerine ayrıca katkı rehberi, GitHub şablonları, görev tablosu ve test iş akışı eklenir.
 
+## Tanıtım sayfası
+
+[Kurulum adımları, Claude Code olmadan kullanım ve ücretsiz Claude hesabıyla öğrenme modu](https://oguzhankaygin.github.io/ogrenci-proje-baslangic/).
+
 ## Kurulum
 
 Claude Code oturumunda:
