@@ -50,6 +50,20 @@ python3 plugin/skills/proje-baslat/scripts/baslat.py \
 
 Claude, öğrencinin denemesinden hareket eder. Kavramdan başlayıp yaklaşım, sözde kod ve kısmi kodla ilerler. Her adımda öğrenciden gerekçeyi veya bir örnekte beklenen sonucu açıklamasını ister. Doğrudan çözüm için öğrencinin açık isteği ve dersin yapay zekâ politikasının izni gerekir. Projeye özgü öğrenme kurallarını kapatmak için üretilen `CLAUDE.md` dosyasındaki **Öğrenme modu** bölümünü kaldırabilirsiniz.
 
+## Etkileşimli konu sayfası
+
+Claude Code'da `/ogrenci-proje:konu-sayfasi Bayes teoremi` komutunu çalıştırın. Claude, tarayıcıda çevrimdışı açabileceğiniz tek bir HTML dosyası oluşturur.
+
+Ücretsiz claude.ai hesabınızda aşağıdaki istemi kopyalayın. Başka bir konu için Bayes örneğini uyarlayabilirsiniz.
+
+```text
+Bayes teoremini öğrenmek için çevrimdışı çalışan tek bir HTML artifact oluştur. Önce tek mesajda dersimi ve seviyemi, işlemek istediğim alt konuyu, zaten bildiklerimi ve varsa paylaşabileceğim ders notunu veya kitap bölümünü sor. Yanıt gelmezse varsayımlarını yaz ve devam et. Not veya kitap metni verirsem yalnızca o metne dayan, eksik bilgiyi belirt.
+
+Sayfada 3–5 öğrenme hedefi, yanıtı gizli bir “Önce tahmin et” sorusu, adım adım anlatım, olasılıkları değiştirince sonucu güncelleyen bir etkileşim, çözümlü örnek, her seçeneği açıklayan beş test sorusu, sık yapılan hatalar ve “Nereden doğrulamalı” bölümü olsun. Kaynak uydurma. Bir ödev sorusu verirsem farklı sayılarla benzer bir örnek kullan ve dersin yapay zekâ politikasını hatırlat.
+
+Dosyayı konu-bayes-teoremi.html olarak adlandır. CSS ve JavaScript dosyanın içinde olsun. Harici kütüphane, CDN, font ve görsel kullanma. Öğrenci girdisini DOM'a textContent ile ekle. Formülleri düz metin, Unicode veya sub/sup ile yaz. Mobil uyum, açık/koyu tema, azaltılmış hareket, klavye erişimi, görünür odak, form etiketleri, canlı geri bildirim ve WCAG AA kontrastı sağla. Teslimden önce örnek hesabı, test yanıtlarını ve çevrimdışı çalışmayı kontrol et.
+```
+
 ## Katkı
 
 Dil şablonları `plugin/skills/proje-baslat/templates/` altında yer alır. Şablon değişikliklerinin ardından üretici testlerini çalıştırın ve PR'da hangi dilde hangi davranışı doğruladığınızı belirtin.

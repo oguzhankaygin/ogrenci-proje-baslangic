@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>İkili arama</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --zemin: #f1f5f4;
+      --kart: #fff;
+      --metin: #172b28;
+      --vurgu: #126054;
+      --cizgi: #58716c;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --zemin: #10201e;
+        --kart: #192d2a;
+        --metin: #e5f2ed;
+        --vurgu: #8de5d0;
+        --cizgi: #92aaa4;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none; transition: none; }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--zemin);
+      color: var(--metin);
+      font: 1rem/1.6 system-ui, sans-serif;
+    }
+    main { width: min(100% - 2rem, 46rem); margin: 2rem auto; }
+    h1, h2 { line-height: 1.2; }
+    h1 { font-size: clamp(2rem, 7vw, 3.5rem); margin-bottom: .25em; }
+    h2 { margin-top: 0; }
+    section {
+      background: var(--kart);
+      padding: clamp(1rem, 4vw, 2rem);
+      margin-block: 1rem;
+      border: 1px solid var(--cizgi);
+      border-radius: .75rem;
+    }
+    label, summary { font-weight: 600; }
+    summary, button { cursor: pointer; }
+    :focus-visible { outline: 3px solid var(--vurgu); outline-offset: 3px; }
+    input, button { font: inherit; color: inherit; }
+    input:not([type="radio"]) {
+      display: block;
+      width: 100%;
+      padding: .5rem;
+      margin: .25rem 0 1rem;
+      border: 1px solid var(--cizgi);
+      border-radius: .3rem;
+      background: var(--kart);
+    }
+    button {
+      padding: .5rem .8rem;
+      border: 1px solid var(--vurgu);
+      border-radius: .3rem;
+      background: var(--vurgu);
+      color: var(--kart);
+    }
+    button[aria-disabled="true"] {
+      background: var(--kart);
+      color: var(--metin);
+      border-color: var(--cizgi);
+      cursor: default;
+    }
+    .dugmeler { display: flex; flex-wrap: wrap; gap: .75rem; }
+    .durum { border-inline-start: 3px solid var(--vurgu); padding-inline-start: .75rem; }
+    fieldset { min-inline-size: 0; margin: 0 0 1rem; border: 1px solid var(--cizgi); }
+    fieldset label { display: block; margin-block: .35rem; }
+    code, li, .durum { overflow-wrap: anywhere; }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>İkili arama</h1>
+    <p>Ortadaki değere bakarak sıralı bir dizide arama aralığını daralt.</p>
+    <p>Başlangıç düzeyi. Dizi indekslerinin 0'dan başladığını bildiğin varsayılıyor.</p>
+  </header>
+
+  <section>
+    <h2>Öğrenme hedefleri</h2>
+    <ul>
+      <li>İkili aramanın neden sıralı bir dizi gerektirdiğini açıkla.</li>
+      <li><code>low</code>, <code>mid</code> ve <code>high</code> indekslerini izle.</li>
+      <li>Aramanın nasıl sona erdiğini ve karşılaştırma sayısının nasıl büyüdüğünü açıkla.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Önce tahmin et</h2>
+    <p><code>[2, 5, 8, 12, 16, 23, 38]</code> dizisinin ortasında 12 var. 23'ü ararken hangi tarafta devam edersin?</p>
+    <details>
+      <summary>Yanıtı göster</summary>
+      <p>Sağda devam edersin. Dizi küçükten büyüğe sıralı olduğu için 12'nin solundaki tüm değerler 23'ten küçüktür.</p>
+    </details>
+  </section>
+
+  <section>
+    <h2>Arama nasıl ilerler?</h2>
+    <ol>
+      <li><code>low = 0</code> ve <code>high = n − 1</code> ile başla. İki sınır da aralığa dahil.</li>
+      <li><code>low &gt; high</code> ise aralık boşaldı ve hedef dizide yok. Aksi hâlde <code>mid = low + ⌊(high − low) / 2⌋</code> ile orta indeksi bul.</li>
+      <li>Ortadaki değer hedefe eşitse indeksi döndür. Hedef daha büyükse <code>low = mid + 1</code>, daha küçükse <code>high = mid − 1</code> yap ve ikinci adıma dön.</li>
+    </ol>
+    <p>Her başarısız karşılaştırma kalan aday sayısını en fazla yarıya indirir. Bu yüzden karşılaştırma sayısı logaritmik büyür.</p>
+  </section>
+
+  <section>
+    <h2>Aramayı adım adım izle</h2>
+    <form id="arama" novalidate>
+      <label for="dizi">Küçükten büyüğe sıralı dizi</label>
+      <input id="dizi" value="2, 5, 8, 12, 16, 23, 38" aria-describedby="dizi-yardim">
+      <p id="dizi-yardim">Tam sayıları virgülle ayır. Aynı sayı birden çok kez yer alabilir.</p>
+      <label for="hedef">Aranan tam sayı</label>
+      <input id="hedef" value="23" inputmode="text">
+      <div class="dugmeler">
+        <button type="submit">Aramayı başlat</button>
+        <button id="adim" type="button" aria-disabled="true">Sonraki adım</button>
+      </div>
+    </form>
+    <p id="arama-durum" class="durum" role="status">Bir dizi ve hedef girip aramayı başlat.</p>
+    <p id="karsilastirma"></p>
+    <ol id="iz"></ol>
+  </section>
+
+  <section>
+    <h2>Çözümlü örnek</h2>
+    <p><code>[2, 5, 8, 12, 16, 23, 38]</code> dizisinde 23'ü ara.</p>
+    <ol>
+      <li><code>low = 0, mid = 3, high = 6</code>. 12 &lt; 23 olduğu için <code>low = 4</code> olur.</li>
+      <li><code>low = 4, mid = 5, high = 6</code>. Değer 23 olduğu için arama 5. indekste biter.</li>
+    </ol>
+    <p>2 karşılaştırma yapıldı. Bu dizide en kötü durumda ⌊log₂ 7⌋ + 1 = 3 karşılaştırma gerekir.</p>
+  </section>
+
+  <section>
+    <h2>Kendini sına</h2>
+    <p>Gerekçeyi görmek için bir seçenek işaretle.</p>
+    <div id="test"></div>
+  </section>
+
+  <section>
+    <h2>Sık yapılan hatalar</h2>
+    <ul>
+      <li><strong>Sırasız dizide aramak.</strong> Ortadaki değere bakarak bir tarafı elemek için dizinin sırasına güvenebilmelisin.</li>
+      <li><strong>Ortadaki indeksi aralıkta bırakmak.</strong> Başarısız karşılaştırmada <code>mid</code> zaten elendi. Yeni sınırı <code>mid + 1</code> veya <code>mid − 1</code> yap.</li>
+      <li><strong>Tek aday kalınca durmak.</strong> <code>low = high</code> olduğunda son adayı da kontrol et.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Nereden doğrulamalı</h2>
+    <p>Ders kitabında veya notlarında arama algoritmaları başlığı altında ikili arama bölümünü bul. Sınırların dahil edilme biçimini, durma koşulunu ve logaritmik karşılaştırma sayısını örnekler üzerinden doğrula.</p>
+  </section>
+</main>
+<script>
+  "use strict";
+
+  const form = document.getElementById("arama");
+  const diziGirdisi = document.getElementById("dizi");
+  const hedefGirdisi = document.getElementById("hedef");
+  const adimDugmesi = document.getElementById("adim");
+  const durum = document.getElementById("arama-durum");
+  const karsilastirma = document.getElementById("karsilastirma");
+  const iz = document.getElementById("iz");
+  let arama;
+
+  function tamSayi(girdi) {
+    const metin = girdi.trim();
+    const sayi = Number(metin);
+    return /^[+-]?\d+$/.test(metin) && Number.isSafeInteger(sayi) ? sayi : NaN;
+  }
+
+  function adimDugmesiniAyarla(etkin) {
+    adimDugmesi.setAttribute("aria-disabled", String(!etkin));
+  }
+
+  function sayaciGoster() {
+    const n = arama.dizi.length;
+    const logaritma = Math.log2(n);
+    karsilastirma.textContent =
+      `Adım sayısı: ${arama.adim}. log₂ ${n} ≈ ${logaritma.toLocaleString("tr", { maximumFractionDigits: 2 })}. ` +
+      `En çok ⌊log₂ ${n}⌋ + 1 = ${Math.floor(logaritma) + 1} karşılaştırma.`;
+  }
+
+  function izlemegiSifirla(mesaj) {
+    arama = undefined;
+    iz.replaceChildren();
+    karsilastirma.textContent = "";
+    adimDugmesiniAyarla(false);
+    durum.textContent = mesaj;
+  }
+
+  form.addEventListener("input", () => {
+    izlemegiSifirla("Girdileri uygulamak için aramayı başlat.");
+  });
+
+  form.addEventListener("submit", (olay) => {
+    olay.preventDefault();
+    const dizi = diziGirdisi.value.split(",").map(tamSayi);
+    const hedef = tamSayi(hedefGirdisi.value);
+    if (dizi.some(Number.isNaN) || dizi.some((deger, i) => i > 0 && deger < dizi[i - 1])) {
+      izlemegiSifirla("Artan sırada, virgülle ayrılmış güvenli tam sayılar gir (mutlak değer en çok 2⁵³ − 1).");
+      diziGirdisi.focus();
+      return;
+    }
+    if (Number.isNaN(hedef)) {
+      izlemegiSifirla("Hedef için güvenli bir tam sayı gir (mutlak değer en çok 2⁵³ − 1).");
+      hedefGirdisi.focus();
+      return;
+    }
+    arama = { dizi, hedef, low: 0, high: dizi.length - 1, adim: 0, bitti: false };
+    iz.replaceChildren();
+    sayaciGoster();
+    adimDugmesiniAyarla(true);
+    durum.textContent = `Hedef ${hedef}. Başlangıçta low = 0, high = ${arama.high}. Bir sonraki adıma geç.`;
+  });
+
+  adimDugmesi.addEventListener("click", () => {
+    if (!arama || arama.bitti) return;
+    const { dizi, hedef, low, high } = arama;
+    const mid = low + Math.floor((high - low) / 2);
+    const deger = dizi[mid];
+    let mesaj = `Adım ${++arama.adim}. low = ${low}, mid = ${mid}, high = ${high}. Ortadaki değer ${deger}. `;
+    if (deger === hedef) {
+      mesaj += `Hedef ${mid}. indekste bulundu.`;
+      arama.bitti = true;
+    } else {
+      if (deger < hedef) {
+        arama.low = mid + 1;
+        mesaj += `Hedef daha büyük. Yeni low = ${arama.low}. `;
+      } else {
+        arama.high = mid - 1;
+        mesaj += `Hedef daha küçük. Yeni high = ${arama.high}. `;
+      }
+      if (arama.low > arama.high) {
+        mesaj += "Aralık boşaldı. Hedef dizide yok.";
+        arama.bitti = true;
+      }
+    }
+    const satir = document.createElement("li");
+    satir.textContent = mesaj;
+    iz.append(satir);
+    sayaciGoster();
+    durum.textContent = mesaj;
+    adimDugmesiniAyarla(!arama.bitti);
+  });
+
+  const sorular = [
+    ["İkili arama hangi dizide uygulanabilir?", [
+      ["[2, 5, 8]", "Doğru. Değerler küçükten büyüğe sıralı."],
+      ["[5, 2, 8]", "Yanlış. 5, 2'den önce geldiği için dizi artan sırada değil."]
+    ]],
+    ["Ortadaki değer 12, hedef 23. Hangi sınır değişir?", [
+      ["high = mid − 1", "Yanlış. Bu güncelleme daha büyük değerlerin bulunduğu sağ tarafı eler."],
+      ["low = mid + 1", "Doğru. 12 ve solundaki değerler 23'ten küçük."]
+    ]],
+    ["low = high olduğunda ne yaparsın?", [
+      ["Son adayı kontrol ederim.", "Doğru. İki sınır da aralığa dahil ve tek aday var."],
+      ["Aramayı bitiririm.", "Yanlış. Aralık ancak low > high olunca boşalır."]
+    ]],
+    ["Sekiz elemanda en çok kaç karşılaştırma gerekir?", [
+      ["3", "Yanlış. Üç başarısız karşılaştırmadan sonra 8 → 4 → 2 → 1 aday kalabilir."],
+      ["4", "Doğru. ⌊log₂ 8⌋ + 1 = 4. Son tek aday da kontrol edilir."]
+    ]],
+    ["[2, 5, 8] dizisinde 2 hangi indekste bulunur?", [
+      ["0", "Doğru. Önce 1. indeksteki 5'i karşılaştırırsın, sonra 0. indeksteki 2'yi bulursun."],
+      ["1", "Yanlış. İndeksler 0'dan başlar. 1. indekste 5 var."]
+    ]]
+  ];
+
+  const test = document.getElementById("test");
+  sorular.forEach(([soru, secenekler], i) => {
+    const grup = document.createElement("fieldset");
+    const baslik = document.createElement("legend");
+    baslik.textContent = `${i + 1}. ${soru}`;
+    const sonuc = document.createElement("p");
+    sonuc.setAttribute("role", "status");
+    grup.append(baslik);
+    secenekler.forEach(([metin, gerekce], j) => {
+      const etiket = document.createElement("label");
+      const girdi = document.createElement("input");
+      girdi.type = "radio";
+      girdi.name = `soru-${i}`;
+      girdi.id = `secenek-${i}-${j}`;
+      etiket.htmlFor = girdi.id;
+      girdi.addEventListener("change", () => { sonuc.textContent = gerekce; });
+      etiket.append(girdi, ` ${metin}`);
+      grup.append(etiket);
+    });
+    grup.append(sonuc);
+    test.append(grup);
+  });
+</script>
+</body>
+</html>

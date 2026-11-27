@@ -1,6 +1,7 @@
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
@@ -11,6 +12,8 @@ from xml.etree import ElementTree
 ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / "plugin"
 SCRIPT = PLUGIN / "skills/proje-baslat/scripts/baslat.py"
+KONU_SKILL = PLUGIN / "skills/konu-sayfasi"
+KONU_EXAMPLE = KONU_SKILL / "ornek/konu-ikili-arama.html"
 PACKAGE = "ogr_3_veri"
 COMMON = {".editorconfig", ".gitignore", "CLAUDE.md", "README.md"}
 TEAM = {
@@ -195,7 +198,7 @@ class PluginTests(unittest.TestCase):
 
     def test_skill_frontmatter(self):
         skills = sorted((PLUGIN / "skills").glob("*/SKILL.md"))
-        self.assertEqual({path.parent.name for path in skills}, {"proje-baslat", "ogrenme-modu"})
+        self.assertEqual({path.parent.name for path in skills}, {"proje-baslat", "ogrenme-modu", "konu-sayfasi"})
         for path in skills:
             with self.subTest(path=path):
                 metadata = read_frontmatter(path)
@@ -205,12 +208,46 @@ class PluginTests(unittest.TestCase):
 
     def test_command_frontmatter(self):
         commands = sorted((PLUGIN / "commands").glob("*.md"))
-        self.assertEqual({path.stem for path in commands}, {"proje-baslat", "ipucu", "teslim-kontrol"})
+        self.assertEqual({path.stem for path in commands}, {"proje-baslat", "ipucu", "teslim-kontrol", "konu-sayfasi"})
         for path in commands:
             with self.subTest(path=path):
                 metadata = read_frontmatter(path)
                 self.assertEqual(set(metadata), {"description", "argument-hint"})
                 self.assertTrue(metadata["description"])
+
+    def test_konu_sayfasi_command_references_skill(self):
+        command = PLUGIN / "commands/konu-sayfasi.md"
+        self.assertEqual(read_frontmatter(command)["argument-hint"], "[konu]")
+        self.assertIn("`ogrenci-proje:konu-sayfasi`", command.read_text(encoding="utf-8"))
+
+    def test_konu_sayfasi_skill_requirements(self):
+        skill = (KONU_SKILL / "SKILL.md").read_text(encoding="utf-8")
+        for text in ("Önce tahmin et", "Nereden doğrulamalı", "CDN"):
+            with self.subTest(text=text):
+                self.assertIn(text, skill)
+
+    def test_konu_sayfasi_example_is_offline_and_accessible(self):
+        html = KONU_EXAMPLE.read_text(encoding="utf-8")
+        self.assertNotRegex(html, r"""(?i)\s(?:src|href)\s*=\s*["']?\s*https?://""")
+        self.assertNotRegex(html, r"(?i)<script\b[^>]*\ssrc\s*=")
+        self.assertNotIn("innerHTML", html)
+        for text in ('lang="tr"', "prefers-color-scheme", "prefers-reduced-motion"):
+            with self.subTest(text=text):
+                self.assertIn(text, html)
+        self.assertRegex(html, r'aria-live\s*=|role\s*=\s*"status"')
+
+    def test_konu_sayfasi_example_script_syntax(self):
+        node = shutil.which("node")
+        if node is None:
+            self.skipTest("Node bulunamadı")
+        html = KONU_EXAMPLE.read_text(encoding="utf-8")
+        scripts = re.findall(r"<script\b[^>]*>(.*?)</script>", html, re.IGNORECASE | re.DOTALL)
+        self.assertTrue(scripts)
+        for script in scripts:
+            result = subprocess.run(
+                [node, "--check", "-"], input=script, capture_output=True, text=True, encoding="utf-8"
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
 
 
 if __name__ == "__main__":

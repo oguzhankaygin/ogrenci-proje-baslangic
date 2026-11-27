@@ -23,6 +23,7 @@
     <ul>
       <li><code>/ogrenci-proje:proje-baslat [ad]</code>: iskeleti oluşturur ve testi çalıştırır.</li>
       <li><code>/ogrenci-proje:ipucu [konu]</code>: öğrenme modunda sıradaki tek ipucunu verir.</li>
+      <li><code>/ogrenci-proje:konu-sayfasi [konu]</code>: konuyu çevrimdışı açılan etkileşimli bir HTML sayfasıyla öğretir.</li>
       <li><code>/ogrenci-proje:teslim-kontrol</code>: testleri, belgeleri, TODO'ları ve Git kayıtlarını denetler.</li>
     </ul>
   </section>
@@ -41,6 +42,17 @@
     <label for="konu">Proje konusu ve dili</label>
     <input id="konu" type="text" maxlength="300" placeholder="Örn. Python ile bağlı liste ödevi">
     <p><button type="button" id="claude-ac">Claude'da aç</button> <span id="durum" class="durum" role="status"></span></p>
+  </section>
+
+  <section aria-labelledby="konu-sayfasi">
+    <h2 id="konu-sayfasi">Etkileşimli konu sayfası</h2>
+    <p>Ücretsiz claude.ai hesabınızda aşağıdaki istemi kopyalayın. Başka bir konu için Bayes örneğini uyarlayabilirsiniz.</p>
+    <div class="kod"><pre id="konu-sayfasi-istem">Bayes teoremini öğrenmek için çevrimdışı çalışan tek bir HTML artifact oluştur. Önce tek mesajda dersimi ve seviyemi, işlemek istediğim alt konuyu, zaten bildiklerimi ve varsa paylaşabileceğim ders notunu veya kitap bölümünü sor. Yanıt gelmezse varsayımlarını yaz ve devam et. Not veya kitap metni verirsem yalnızca o metne dayan, eksik bilgiyi belirt.
+
+Sayfada 3–5 öğrenme hedefi, yanıtı gizli bir “Önce tahmin et” sorusu, adım adım anlatım, olasılıkları değiştirince sonucu güncelleyen bir etkileşim, çözümlü örnek, her seçeneği açıklayan beş test sorusu, sık yapılan hatalar ve “Nereden doğrulamalı” bölümü olsun. Kaynak uydurma. Bir ödev sorusu verirsem farklı sayılarla benzer bir örnek kullan ve dersin yapay zekâ politikasını hatırlat.
+
+Dosyayı konu-bayes-teoremi.html olarak adlandır. CSS ve JavaScript dosyanın içinde olsun. Harici kütüphane, CDN, font ve görsel kullanma. Öğrenci girdisini DOM'a textContent ile ekle. Formülleri düz metin, Unicode veya sub/sup ile yaz. Mobil uyum, açık/koyu tema, azaltılmış hareket, klavye erişimi, görünür odak, form etiketleri, canlı geri bildirim ve WCAG AA kontrastı sağla. Teslimden önce örnek hesabı, test yanıtlarını ve çevrimdışı çalışmayı kontrol et.</pre>
+      <button type="button" data-kopyala="konu-sayfasi-istem">Kopyala</button></div>
   </section>
 
   <section aria-labelledby="araclar">
